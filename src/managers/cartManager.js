@@ -1,4 +1,5 @@
 import { CartModel } from "../models/cart-model.js";
+import { ProductModel } from "../models/product-model.js";
 
 class CartManager {
     constructor(model){
@@ -33,12 +34,11 @@ class CartManager {
 
     addProdToCart = async(cid,pid)=>{
         try {
-            const product = await this.model.findById(pid);
+            const product = await ProductModel.findById(pid);
             if(!product) throw new Error('producto no encontrado');
-            const carts = await this.model.find()
-            const cart = carts.findById(cid);
+            const cart = await this.model.findById(cid);
             if(!cart) throw new Error('carrito no encontrado');
-            const existingProd = cart.products.findById(pid);
+            const existingProd = cart.products.find(p => p.product.toString() === pid);
             if(existingProd){
                 existingProd.quantity++;
             }else{
@@ -55,7 +55,7 @@ class CartManager {
     }
     clearProds = async(cid, products) =>{
         try {
-            return await this.model.findByIdandUpdate(
+            return await this.model.findByIdAndUpdate(
                 cid,
                 {products: []},
                 {new: true}
