@@ -1,11 +1,11 @@
 import { connect } from "mongoose";
 
+const MONGO_URL = process.env.MONGO_URL;
+console.log(MONGO_URL)
 
 export const initMongoDB = async ()=>{
     try {
-        const URL = process.env.URL;
-        console.log(URL)
-        await connect(URL);
+        await connect(MONGO_URL);
     } catch (error) {
         throw new Error(error);
     }

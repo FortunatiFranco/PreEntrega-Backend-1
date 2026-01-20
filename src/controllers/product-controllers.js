@@ -1,4 +1,5 @@
 import { productManager } from "../managers/productManager.js";
+import { createProducts } from "../utils/product-utils.js";
 
 class ProductControllers {
     constructor(manager) {
@@ -53,6 +54,16 @@ delete = async(req, res) => {
         return res.json(response);
     } catch (error) {
         res.status(400).json(error);
+    }
+}
+
+createManyProducts = async(req, res) =>{
+    try {
+        const data = createProducts();
+        const response = await this.manager.create(data)
+        res.json({message: `${response.length} productos creados`})
+    } catch (error) {
+        res.status(400).json(error.message)
     }
 }
 }
