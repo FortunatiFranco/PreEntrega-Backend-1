@@ -6,21 +6,21 @@ class CartManager {
         this.model = model;
     }
 
-    cartAll = async()=>{
+    getAll = async()=>{
         try {
             return await this.model.find()
         } catch (error) {
-            throw new Error(error)
+            throw new Error(error.message)
         }
     }
 
-    cartById = async(cid)=>{
+    getById = async(cid)=>{
         try {
             const cart = await this.model.findById(cid)
             if(!cart) return null;
             return cart;
         } catch (error) {
-            throw new Error(error)
+            throw new Error(error.message)
         }
     }
 
@@ -28,17 +28,17 @@ class CartManager {
         try {
             return await this.model.create({products: []})
         } catch (error) {
-            throw new Error(error)
+            throw new Error(error.message)
         }
     }
 
-    addProdToCart = async(cid,pid)=>{
+    addProduct = async(cid,pid)=>{
         try {
             const product = await ProductModel.findById(pid);
             if(!product) throw new Error('producto no encontrado');
             const cart = await this.model.findById(cid);
             if(!cart) throw new Error('carrito no encontrado');
-            const existingProd = cart.products.find(p => p.product.toString() === pid);
+            const existingProd = cart.products.find(p => p.product.toString() === pid.toString());
             if(existingProd){
                 existingProd.quantity++;
             }else{
@@ -50,10 +50,10 @@ class CartManager {
             await cart.save();
             return cart;
         } catch (error) {
-            throw new Error(error)
+            throw new Error(error.message)
         }
     }
-    clearProds = async(cid, products) =>{
+    clearCart = async(cid) =>{
         try {
             return await this.model.findByIdAndUpdate(
                 cid,
@@ -61,7 +61,7 @@ class CartManager {
                 {new: true}
             );
         } catch (error) {
-            throw new Error(error)
+            throw new Error(error.message);
         }
     }
 
@@ -69,7 +69,7 @@ class CartManager {
         try {
             return await this.model.findByIdAndDelete(cid)
         } catch (error) {
-            throw new Error(error)
+            throw new Error(error.message);
         }
     }
 }

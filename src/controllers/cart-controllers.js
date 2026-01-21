@@ -19,7 +19,7 @@ getById = async(req, res) => {
     try {
         const { cid } = req.params;
         const response = await this.manager.getById(cid);
-        if (!response) throw new Error("Producto no encontrado");
+        if (!response) throw new Error("Carrito no encontrado");
         return res.json(response);
     } catch (error) {
         res.status(400).json(error);
@@ -28,14 +28,14 @@ getById = async(req, res) => {
 
 create = async(req, res) => {
     try {
-        const response = await this.manager.create(req.body);
+        const response = await this.manager.createCart(req.body);
         res.json(response);
     } catch (error) {
         res.status(400).json(error.message);
     }
 }
 
-addProdToCart = async(cid, pid) =>{
+addProdToCart = async(req, res) =>{
     try {
         const {cid} = req.params;
         const {pid} = req.params;
@@ -47,8 +47,8 @@ addProdToCart = async(cid, pid) =>{
 update = async(req, res) => {
     try {
         const { cid } = req.params;
-        const response = await this.manager.update(cid, req.body);
-        if (!response) throw new Error("Producto no encontrado");
+        const response = await this.manager.clearCart(cid, req.body);
+        if (!response) throw new Error("Carrito no encontrado");
         return res.json(response);
     } catch (error) {
         res.status(400).json(error);
@@ -58,8 +58,8 @@ update = async(req, res) => {
 delete = async(req, res) => {
     try {
         const { cid } = req.params;
-        const response = await this.manager.delete(cid);
-        if (!response) throw new Error("Producto no encontrado");
+        const response = await this.manager.deleteCart(cid);
+        if (!response) throw new Error("Carrito no encontrado");
         return res.json(response);
     } catch (error) {
         res.status(400).json(error);
