@@ -5,9 +5,13 @@ class ProductManager {
         this.model= model;
     }
 
-    async getAll () {
+    getAll = async (page = 1, limit = 10, sort) => {
         try {
-            return await this.model.find({});
+            let sortOrder = {};
+            if(sort){
+                sortOrder.price = sort === 'asc' ? 1 : -1;
+            }
+            return await this.model.paginate({}, { page, limit, sort: sortOrder});
         } catch (error) {
             throw new Error(error);
         }

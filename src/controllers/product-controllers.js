@@ -6,10 +6,27 @@ class ProductControllers {
         this.manager = manager;
 }
 
-getAll = async(req, res)=> {
+getAll = async(req, res, sort)=> {
     try {
-        const response = await this.manager.getAll();
-        res.json(response);
+        const {page, limit} = req.query;
+        const response = await this.manager.getAll(page, limit, sort);
+        const nextPage = response.hasNextPage
+        ? `http://localhost:8080/api/products?page=${response.nextPage}`
+        : null;
+        const prevPage = response.hasPrevPage
+        ? `http://localhost:8080/api/products?page=${response.prevPage}`
+        : null;
+        res.json({
+            payload: response.docs,
+            info: {
+                count: response.totalDocs,
+                totalPages: response.totalPages,
+                nextLink: nextPage,
+                prevLink: prevPage,
+                hasPrevPage: response.hasPrevPage,
+                hasNextPage: response.hasNextPage,
+            },
+        });
     } catch (error) {
         res.status(400).json(error);
     }
